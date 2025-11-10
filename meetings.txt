@@ -1,0 +1,28 @@
+SPRINT 1
+
+Sprint Planning
+Date: 11/3/2025
+Main Objective: Divide the first user story’s tasks and assign 1 screen to each one.
+Details:
+Start working on the first user story (As a user, I want to be able to smoothly navigate through the game so that I can choose and play each level at will.)
+Decided to work on the screen view for the first sprint.
+Look over the first user story’s tasks and assign one screen to each. (Anthony - Level Select, Nick - Game Screen, Alexander - Main Menu Screen and Results Screen)
+
+Stand-Up
+Date: 11/5/2025
+Main Objective: Show a quick demo of our screens.
+Details:
+Make sure our screen elements (i.e. buttons, text) are dynamically declared so that they adjust to different screen sizes.
+Resolve the miscommunication of Nick and Alexander working on the same screen.
+Showed a quick demo of the different screens.
+
+Sprint Review (Retrospective)
+Date: 11/9/2025
+Main Objective: Merge our individual branches to main, through pull requests, and make sure we can link all screens together.
+Details:
+Merged our branches to main.
+Start working on resolving the merging conflicts because gamescreen was used for both the level screen and the level select screen. Solution: put all level screens to the screen switcher.
+After solving the merge conflict, pull the new main onto local machines and make sure it runs without errors.
+Cleaned up details about universal sizing and expandability for level template
+Todo before the next meeting, resolve merge conflicts and create "test screens" to navigate to placeholders for levels.
+For Monday, work on organizing the level select screen and make sure we can navigate through the different screens.
