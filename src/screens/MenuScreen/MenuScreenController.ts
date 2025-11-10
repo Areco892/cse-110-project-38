@@ -2,6 +2,7 @@ import { ScreenController } from "../../types.ts";
 import type { ScreenSwitcher } from "../../types.ts";
 import { GameScreenController } from "../GameScreen/GameScreenController.ts";
 import { GameScreenModel } from "../GameScreen/GameScreenModel.ts";
+import { LevelScreenController } from "../LevelScreen/LevelScreenController.ts";
 import { MenuScreenView } from "./MenuScreenView.ts";
 
 /**
@@ -22,8 +23,8 @@ export class MenuScreenController extends ScreenController {
 	 */
 	private handleStartClick(): void {
 		// TODO: Task 1 - Implement screen transition from menu to game
-		this.screenSwitcher.switchToScreen({ type: "result", score: 10 });
-
+		//this.screenSwitcher.switchToScreen({ type: "result", score: 10 });
+		this.screenSwitcher.switchToScreen({type: "select"});
 
 	}
 

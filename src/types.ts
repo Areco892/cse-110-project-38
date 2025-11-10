@@ -16,8 +16,9 @@ export interface View {
  */
 export type Screen =
 	| { type: "menu" }
-	| { type: "game" }
-	| { type: "result"; score: number };
+	| { type: "game"; level?: number }
+	| { type: "result"; score: number }
+	| {type: "select"};
 
 export abstract class ScreenController {
 	abstract getView(): View;

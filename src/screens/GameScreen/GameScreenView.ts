@@ -19,6 +19,10 @@ export class GameScreenView implements View {
 	private game_screen: Konva.Group
 	private level1: Konva.Group
 
+	// ------------------- TEMP LEVEL -------------------
+	private tempLevelGroup: Konva.Group | null = null; // temp level placeholder
+	// -------------------------------------------------
+
 	constructor(onLemonClick: () => void) {
 		// initialize Groups
 		this.background_day = new Konva.Group({ visible: false })
@@ -759,6 +763,72 @@ export class GameScreenView implements View {
 	updateTimer(timeRemaining: number): void {
 		this.day_castle.getLayer()?.draw()
 	}
+
+
+
+
+
+
+		/**
+	 * Show a temporary level screen dynamically
+	 */
+	showTempLevel(levelNumber: number): void {
+		// Remove old temp level if exists
+		if (this.tempLevelGroup) {
+			this.tempLevelGroup.destroy();
+			this.tempLevelGroup = null;
+		}
+
+		// Create new temp level group
+		this.tempLevelGroup = new Konva.Group({ visible: true });
+		
+		// Use base dimensions (800x600) - scaling is handled by game_screen parent
+		const bg = new Konva.Rect({
+			x: 0,
+			y: 0,
+			width: 800,  // Base width
+			height: 600, // Base height
+			fill: "rgba(0,0,0,0.8)",
+		});
+		this.tempLevelGroup.add(bg);
+
+		// Big text showing level
+		const text = new Konva.Text({
+			text: `Level ${levelNumber}`,
+			fontSize: 72,  // Fixed size for base dimensions
+			fontFamily: "Arial",
+			fill: "white",
+		});
+		text.x((800 - text.width()) / 2);
+		text.y((600 - text.height()) / 2);
+		this.tempLevelGroup.add(text);
+
+		// Hide all other main groups
+		this.background_day.visible(false);
+		this.background_dawn.visible(false);
+		this.background_night.visible(false);
+		this.character.visible(false);
+		this.enemy1.visible(false);
+		this.day_castle.visible(false);
+		this.night_castle.visible(false);
+		this.game_ui.visible(false);
+		this.pause_ui.visible(false);
+
+		// Add to main game_screen BEFORE setting visibility
+		this.game_screen.add(this.tempLevelGroup);
+
+		// Make game_screen visible if it isn't already
+		this.game_screen.visible(true);
+
+		// Draw the layer
+		const layer = this.game_screen.getLayer();
+		if (layer) {
+			layer.batchDraw();
+		}
+	}
+
+
+
 
 	/**
 	 * Show the screen

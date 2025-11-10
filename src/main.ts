@@ -2,6 +2,7 @@ import Konva from "konva";
 import type { ScreenSwitcher, Screen } from "./types.ts";
 import { MenuScreenController } from "./screens/MenuScreen/MenuScreenController.ts";
 import { GameScreenController } from "./screens/GameScreen/GameScreenController.ts";
+import { LevelScreenController } from "./screens/LevelScreen/LevelScreenController.ts";
 import { ResultsScreenController } from "./screens/ResultsScreen/ResultsScreenController.ts";
 import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
 
@@ -18,10 +19,11 @@ import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
 class App implements ScreenSwitcher {
 	private stage: Konva.Stage;
 	private layer: Konva.Layer;
-
+	
+	private levelController: LevelScreenController;  //LEVEL SELECT SCREEN
 	private menuController: MenuScreenController;
 	private gameController: GameScreenController;
-	private resultsController: ResultsScreenController;
+	private resultsController: ResultsScreenController;  //THESE ARE ALL THE SCREENS YOU WILL IMPORT TO SCREEN SWITCHER
 
 	constructor(container: string) {
 		// Initialize Konva stage (the main canvas)
@@ -40,18 +42,21 @@ class App implements ScreenSwitcher {
 		this.menuController = new MenuScreenController(this);
 		this.gameController = new GameScreenController(this);
 		this.resultsController = new ResultsScreenController(this);
+		this.levelController = new LevelScreenController(this);
 
 		// Add all screen groups to the layer
 		// All screens exist simultaneously but only one is visible at a time
 		this.layer.add(this.menuController.getView().getGroup());
 		this.layer.add(this.gameController.getView().getGroup());
 		this.layer.add(this.resultsController.getView().getGroup());
+		this.layer.add(this.levelController.getView().getGroup());
+
 
 		// Draw the layer (render everything to the canvas)
 		this.layer.draw();
 
 		// Start with menu screen visible
-		this.gameController.getView().show();
+		this.menuController.getView().show();
 	}
 
 	/**
@@ -68,6 +73,7 @@ class App implements ScreenSwitcher {
 		this.menuController.hide();
 		this.gameController.hide();
 		this.resultsController.hide();
+		this.levelController.hide();
 
 		// Show the requested screen based on the screen type
 		switch (screen.type) {
@@ -75,14 +81,23 @@ class App implements ScreenSwitcher {
 				this.menuController.show();
 				break;
 
-			case "game":
+			case "game":  //editing game to be more dynamic
 				// Start the game (which also shows the game screen)
-				this.gameController.startGame();
+				if (screen.level !== undefined)  //game needs to be remade
+				{
+					this.gameController.startLevel(screen.level); // pass the selected level
+				} else 
+				{
+					this.gameController.startGame(); // normal game start
+				}
 				break;
-
 			case "result":
 				// Show results with the final score
 				this.resultsController.showResults(screen.score);
+				break;
+			case "select":
+				// Show results with the final score
+				this.levelController.startGame();
 				break;
 		}
 	}
