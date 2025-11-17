@@ -1,12 +1,12 @@
-import { BaseCharacter } from "../../components/BaseCharacter";
+import { Character } from "../../components/Character";
 
 /**
  * GameScreenModel - Manages game state
  */
 export class GameScreenModel {
 	private score = 0;
-	private player: BaseCharacter = new BaseCharacter(100, 100 / 3);
-	private enemy: BaseCharacter = new BaseCharacter(100, 100 / 3);
+	private player: Character = new Character(100, 100 / 3);
+	private enemy: Character = new Character(100, 100 / 3);
 	private question_bank: string[] = ["2+2", "3+3"];
 	private current_question: number = 0;
 	private answer_bank: number[] = [4, 6];
@@ -20,10 +20,6 @@ export class GameScreenModel {
 		this.enemy.health = 100;
 		this.enemy.isAlive = true;
 		this.score = 0;
-	}
-
-	getPlayerHealth(): number {
-		return this.player.getHealth();
 	}
 
 	getQuestion(): string {
@@ -40,23 +36,21 @@ export class GameScreenModel {
 		}
 	}
 
-	updatePlayerHealth(): void {
-		this.player.takeDamage(this.enemy.damage);
+	attackPlayer(): void {
+		this.enemy.attack(this.player);
+	}
+
+	attackEnemy(): void {
+		this.player.attack(this.enemy);
+	}
+
+	getPlayerHealth(): number {
+		return this.player.getHealth();
 	}
 
 	getEnemyHealth(): number {
 		return this.enemy.getHealth();
 	}
-
-	updateEnemyHealth(): void {
-		this.enemy.takeDamage(this.player.damage);
-	}
-
-
-
-
-
-
 
 	/**
 	 * Increment score when lemon is clicked

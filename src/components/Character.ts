@@ -1,6 +1,4 @@
-import Konva from 'konva';
-
-export class BaseCharacter {
+export class Character {
     /* ========================================================= 
         Properties 
     ============================================================ */
@@ -20,16 +18,12 @@ export class BaseCharacter {
     /* ========================================================= 
         Methods 
     ============================================================ */
-    attack(target: BaseCharacter): void {
-        target.takeDamage(this.damage);
-    }
+    attack(target: Character): void {
+        target.health -= this.damage;
 
-    takeDamage(amount: number): void {
-        this.health -= amount;
-
-        if (this.health <= 0) {
-            this.health = 0;
-            this.defeat();
+        if (target.health <= 0) {
+            target.health = 0;
+            target.defeat();
         }
     }
 
