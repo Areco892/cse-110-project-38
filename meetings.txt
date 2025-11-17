@@ -26,4 +26,33 @@ After solving the merge conflict, pull the new main onto local machines and make
 Cleaned up details about universal sizing and expandability for level template
 Todo before the next meeting, resolve merge conflicts and create "test screens" to navigate to placeholders for levels.
 For Monday, work on organizing the level select screen and make sure we can navigate through the different screens.
- 
+
+SPRINT 2
+
+Sprint Planning
+Date: 11/10/2025
+Main Objective: Work on organizing the level select screen and make sure we can navigate through the different screens by resolving the merging conflict.
+Details:
+Solved the merge conflict. Uploaded the requirements and architecture documents. Finalize the navigation user story.
+Made sure to user story 1 works on all of our devices. Added tasks in issues in github. 
+For this sprint, we will focus on inputHandler class, player class, and enemy class. View should reflect inputted question and user input.
+Add animations, make sure theres input validaiton, and do string cleaning.
+
+StandUp
+Date: 11/13/2025
+Main Objective: Work on Player, Enemy, and Input Handler Classes.
+Details: 
+Anthony:  Refactored and added extra files and directorys for mvc
+Alex: Starting input detection view and validaiton as well as enemy class.
+NicK: cleaned up refactored game screen view to work with input.
+No problems so far, however anticpating large merge conflicts
+keeping most stuff in seperate classes to redcue merge conflicts
+
+Sprint Review
+Date: 11/16/2025
+Main Objective: Create pull request and solve any merge conflict that might arise for incorporating the Player, Enemy, and Input Handler Classes. 
+Details: 
+Get Gamescreenview.ts in main, so we can work with our model and view classes to work with his visuls as he cleaned up the file a good portion.
+Start planning level progression logic, lvel manager, questionmanager, game state. 
+Todo: answer checking /input validation'/ cleaning/ sanitzing etc.
+Todo: create tests for the player enemy and input valdiaiton.
