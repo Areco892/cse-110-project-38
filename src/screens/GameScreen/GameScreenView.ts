@@ -39,16 +39,16 @@ export class GameScreenView implements View {
 		this.backgroundDay = new Konva.Group({ visible: true })
 		this.backgroundDawn = new Konva.Group({ visible: true })
 		this.backgroundNight = new Konva.Group({ visible: true })
-		this.character = new Konva.Group({visible: true })
+		this.character = new Konva.Group({ visible: true })
 		this.enemy1 = new Konva.Group({ visible: true })
 		this.dayCastle = new Konva.Group({ visible: true })
 		this.nightCastle = new Konva.Group({ visible: true })
 		this.gameUI = new Konva.Group({ visible: true })
 		this.pauseUI = new Konva.Group({ visible: false })
-		this.pauseGroup = new Konva.Group({ visible: true})
-		this.resumeGroup = new Konva.Group({ visible: true})
-		this.quitGroup = new Konva.Group({ visible: true})
-		this.playerInputGroup = new Konva.Group({ visible: true})
+		this.pauseGroup = new Konva.Group({ visible: true })
+		this.resumeGroup = new Konva.Group({ visible: true })
+		this.quitGroup = new Konva.Group({ visible: true })
+		this.playerInputGroup = new Konva.Group({ visible: true })
 		this.ansText = new Konva.Text
 		this.questText = new Konva.Text
 		this.inputTextArea = document.createElement('textarea')
@@ -67,14 +67,14 @@ export class GameScreenView implements View {
 		// this.createLevel5()
 
 		this.createEventHandlers(onPauseClick, onResumeClick, onQuitClick, onKeyPress, onEnter)
-		
+
 		// scale to screen
 		this.gameScreen.scaleX(STAGE_WIDTH / 800)
 		this.gameScreen.scaleY(STAGE_HEIGHT / 600)
 	}
-		/**
-	 * Show a temporary level screen dynamically
-	 */
+	/**
+ * Show a temporary level screen dynamically
+ */
 	showTempLevel(levelNumber: number): void {
 		// Remove old temp level if exists
 		if (this.tempLevelGroup) {
@@ -84,7 +84,7 @@ export class GameScreenView implements View {
 
 		// Create new temp level group
 		this.tempLevelGroup = new Konva.Group({ visible: true });
-		
+
 		// Use base dimensions (800x600) - scaling is handled by gameScreen parent
 		const bg = new Konva.Rect({
 			x: 0,
@@ -151,7 +151,7 @@ export class GameScreenView implements View {
 	}
 
 	togglePauseOverlay(): void {
-		if(this.pauseUI.isVisible()) {
+		if (this.pauseUI.isVisible()) {
 			this.pauseUI.hide()
 		} else {
 			this.pauseUI.show()
@@ -181,7 +181,7 @@ export class GameScreenView implements View {
 
 		// dawn background
 		this.addBgDawn()
-		
+
 		// game ui
 		this.addGameUI()
 
@@ -190,11 +190,11 @@ export class GameScreenView implements View {
 
 		// create character
 		this.addCharacter()
-	
+
 
 		// wizard
 		this.addWiz()
-		
+
 		// create towers
 		this.addDayCastle()
 
@@ -219,11 +219,11 @@ export class GameScreenView implements View {
 
 		// create character
 		this.addCharacter()
-	
+
 
 		// wizard
 		this.addWiz()
-		
+
 		// create towers
 		this.addDayCastle()
 
@@ -248,7 +248,7 @@ export class GameScreenView implements View {
 
 		// create character
 		this.addCharacter()
-		
+
 		// create enemy variants
 
 		// wizard
@@ -284,12 +284,12 @@ export class GameScreenView implements View {
 
 		// create character
 		this.addCharacter()
-		
+
 		// create enemy variants
 
 		// wizard
 		this.addWiz()
-		
+
 		// create towers
 		this.addDayCastle()
 
@@ -326,12 +326,12 @@ export class GameScreenView implements View {
 
 		// create character
 		this.addCharacter()
-		
+
 		// create enemy variants
 
 		// wizard
 		this.addWiz()
-		
+
 		// create towers
 		this.addDayCastle()
 
@@ -350,7 +350,7 @@ export class GameScreenView implements View {
 		this.gameScreen.add(this.pauseUI)
 
 	}
-	
+
 
 	// create level components
 	addBgDay(): void {
@@ -382,7 +382,7 @@ export class GameScreenView implements View {
 		this.backgroundDay.add(bgDay)
 		this.backgroundDay.add(bgDayField)
 		this.backgroundDay.add(bgDaySun)
-		
+
 	}
 	addBgDawn(): void {
 		const bgDawn = new Konva.Rect({
@@ -392,9 +392,9 @@ export class GameScreenView implements View {
 			height: 600,
 			// fill: 'blue'
 			fillPriority: 'radial-gradient',
-			fillRadialGradientStartPoint: {x: 400, y: 500},
+			fillRadialGradientStartPoint: { x: 400, y: 500 },
 			fillRadialGradientStartRadius: 0,
-			fillRadialGradientEndPoint: {x: 400, y: 500},
+			fillRadialGradientEndPoint: { x: 400, y: 500 },
 			fillRadialGradientEndRadius: 500,
 			fillRadialGradientColorStops: [0, '#FFF2BD', 0.2, '#F4D797', 0.4, '#EBB58A', 0.6, '#DA7F7D', 0.8, '#B5728E', 1, '#776E99'],
 
@@ -427,7 +427,7 @@ export class GameScreenView implements View {
 			y: 0,
 			width: 800,
 			height: 600,
-			fill: "#000c5c", 
+			fill: "#000c5c",
 		})
 		var bgNightMoon = new Konva.Circle({
 			x: 700,
@@ -538,7 +538,7 @@ export class GameScreenView implements View {
 			sceneFunc: function (context, shape) {
 				context.beginPath()
 				context.moveTo(0, 0) // Relative to the shape's x, y
-				for(let i: number = 5; i < 800; i += 40) {
+				for (let i: number = 5; i < 800; i += 40) {
 					context.lineTo(i + 20, 0)
 					context.lineTo(i + 20, 20)
 					context.lineTo(i + 40, 20)
@@ -549,7 +549,7 @@ export class GameScreenView implements View {
 				context.lineTo(0, 40)
 				context.closePath()
 				context.fillStrokeShape(shape)
-  			},
+			},
 		})
 
 		this.backgroundNight.add(bgNight)
@@ -566,11 +566,11 @@ export class GameScreenView implements View {
 		this.backgroundNight.add(nightCastleWall)
 		this.backgroundNight.add(nightCren)
 	}
-	addGameUI() : void {
+	addGameUI(): void {
 		var infoBtn = new Konva.Rect({
 			x: 25,
 			y: 25,
-			width: 50, 
+			width: 50,
 			height: 50,
 			fill: 'grey',
 			stroke: 'black',
@@ -580,7 +580,7 @@ export class GameScreenView implements View {
 		var infoBar = new Konva.Rect({
 			x: 45,
 			y: 47,
-			width: 10, 
+			width: 10,
 			height: 20,
 			fill: 'black',
 			stroke: 'black',
@@ -599,7 +599,7 @@ export class GameScreenView implements View {
 		var pauseBtn = new Konva.Rect({
 			x: 725,
 			y: 25,
-			width: 50, 
+			width: 50,
 			height: 50,
 			fill: 'grey',
 			stroke: 'black',
@@ -609,7 +609,7 @@ export class GameScreenView implements View {
 		var pauseBar1 = new Konva.Rect({
 			x: 735,
 			y: 35,
-			width: 10, 
+			width: 10,
 			height: 30,
 			fill: 'black',
 			stroke: 'black',
@@ -619,7 +619,7 @@ export class GameScreenView implements View {
 		var pauseBar2 = new Konva.Rect({
 			x: 755,
 			y: 35,
-			width: 10, 
+			width: 10,
 			height: 30,
 			fill: 'black',
 			stroke: 'black',
@@ -679,8 +679,8 @@ export class GameScreenView implements View {
 		this.playerInputGroup.on('click', () => {
 			var textPosition = this.ansText.absolutePosition();
 			this.inputTextArea.style.left = textPosition.x - 1000 + 'px';
-			this.inputTextArea.style.top = textPosition.y - 1000 + 'px'; 
-			this.inputTextArea.style.width = (this.ansText.width() *  STAGE_WIDTH /  800)+ 'px';
+			this.inputTextArea.style.top = textPosition.y - 1000 + 'px';
+			this.inputTextArea.style.width = (this.ansText.width() * STAGE_WIDTH / 800) + 'px';
 			this.inputTextArea.style.height = (this.ansText.height() * STAGE_HEIGHT / 600) + 'px';
 			this.inputTextArea.value = '';
 			this.inputTextArea.style.display = 'block';
@@ -835,7 +835,7 @@ export class GameScreenView implements View {
 			stroke: 'black',
 			strokeWidth: 3,
 		})
-		
+
 		this.character.add(charHead)
 		this.character.add(charBody)
 		this.character.add(charLeg1)
@@ -890,7 +890,7 @@ export class GameScreenView implements View {
 				context.lineTo(34, 0)
 				context.closePath()
 				context.fillStrokeShape(shape)
-  			},
+			},
 		})
 		var wizArms = new Konva.Line({
 			points: [605, 405, 625, 410, 645, 400],
@@ -911,7 +911,6 @@ export class GameScreenView implements View {
 			stroke: 'black',
 			strokeWidth: 3,
 		})
-
 
 		this.enemy1.add(wizHead)
 		this.enemy1.add(wizBody)
@@ -942,7 +941,7 @@ export class GameScreenView implements View {
 			sceneFunc: function (context, shape) {
 				context.beginPath()
 				context.moveTo(0, 0) // Relative to the shape's x, y
-				for(let i: number = -10; i < 230; i += 40) {
+				for (let i: number = -10; i < 230; i += 40) {
 					context.lineTo(i + 20, 0)
 					context.lineTo(i + 20, 20)
 					context.lineTo(i + 40, 20)
@@ -953,7 +952,7 @@ export class GameScreenView implements View {
 				context.lineTo(0, 40)
 				context.closePath()
 				context.fillStrokeShape(shape)
-  			},
+			},
 		})
 		var castle1Window1 = new Konva.Rect({
 			x: 50,
@@ -977,7 +976,7 @@ export class GameScreenView implements View {
 			strokeWidth: 3
 
 		})
-		
+
 		var castle2 = new Konva.Rect({
 			x: 570,
 			y: 470,
@@ -996,7 +995,7 @@ export class GameScreenView implements View {
 			sceneFunc: function (context, shape) {
 				context.beginPath()
 				context.moveTo(0, 0)
-				for(let i: number = 10; i > -230; i -= 40) {
+				for (let i: number = 10; i > -230; i -= 40) {
 					context.lineTo(i - 20, 0)
 					context.lineTo(i - 20, 20)
 					context.lineTo(i - 40, 20)
@@ -1007,7 +1006,7 @@ export class GameScreenView implements View {
 				context.lineTo(0, 40)
 				context.closePath()
 				context.fillStrokeShape(shape)
-  			},
+			},
 		})
 		var castle2Window1 = new Konva.Rect({
 			x: 620,
@@ -1051,7 +1050,7 @@ export class GameScreenView implements View {
 			sceneFunc: function (context, shape) {
 				context.beginPath()
 				context.moveTo(0, 0) // Relative to the shape's x, y
-				for(let i: number = -10; i < 800; i += 40) {
+				for (let i: number = -10; i < 800; i += 40) {
 					context.lineTo(i + 20, 0)
 					context.lineTo(i + 20, 20)
 					context.lineTo(i + 40, 20)
@@ -1062,7 +1061,7 @@ export class GameScreenView implements View {
 				context.lineTo(0, 40)
 				context.closePath()
 				context.fillStrokeShape(shape)
-  			},
+			},
 		})
 		var nightWindow1 = new Konva.Rect({
 			x: 87.5,
@@ -1110,5 +1109,5 @@ export class GameScreenView implements View {
 	}
 
 
-	
+
 }

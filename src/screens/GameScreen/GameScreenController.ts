@@ -40,8 +40,7 @@ export class GameScreenController extends ScreenController {
 	 */
 	private stopTimer(): void {
 		// TODO: Task 3 - Stop the timer using clearInterval
-		if(this.gameTimer != null)
-		{
+		if (this.gameTimer != null) {
 			clearInterval(this.gameTimer);
 			this.gameTimer = null;
 		}
@@ -61,7 +60,7 @@ export class GameScreenController extends ScreenController {
 	private handleQuitClick(): void {
 		this.view.togglePauseOverlay()
 		this.view.resetAnsBox()
-		this.screenSwitcher.switchToScreen({ type: 'menu'})
+		this.screenSwitcher.switchToScreen({ type: 'menu' })
 	}
 
 	private handleKeyPress(): void {
@@ -69,7 +68,7 @@ export class GameScreenController extends ScreenController {
 	}
 
 	private checkEnter(event: KeyboardEvent): void {
-		if(event.keyCode == 13) {
+		if (event.keyCode == 13) {
 			this.playerInput = this.view.getAns()
 			this.view.resetAnsBox()
 			this.view.updateText(this.playerInput)
@@ -83,20 +82,20 @@ export class GameScreenController extends ScreenController {
 	}
 
 	//TEMPORARY LEVEL VIEW FOR TESTING
-   	startTempLevel(levelNumber: number): void {
-        console.log(`Showing temp level ${levelNumber}`);
+	startTempLevel(levelNumber: number): void {
+		console.log(`Showing temp level ${levelNumber}`);
 
-        // Call view function to show temp level overlay
-        this.view.showTempLevel(levelNumber);
-    }	
+		// Call view function to show temp level overlay
+		this.view.showTempLevel(levelNumber);
+	}
 
-		/**
-	 * Start a specific level (efficient dispatch)
-	 * @param levelNumber - Index of the level to start
-	 */
+	/**
+ * Start a specific level (efficient dispatch)
+ * @param levelNumber - Index of the level to start
+ */
 	startLevel(levelNumber: number): void {
 		// TODO: Add real start level logic for each level here.
-    	// You can create separate functions for each level, e.g., startLevel1(), startLevel2(), etc.
+		// You can create separate functions for each level, e.g., startLevel1(), startLevel2(), etc.
 
 		console.log(`startLevel called for level ${levelNumber}`); //notes which level is being started
 
@@ -115,22 +114,21 @@ export class GameScreenController extends ScreenController {
 			3: () => {
 				console.log("Starting Level 3");
 				this.startTempLevel(3); //TODO CHANGE TO REAL LEVEL LOGIC CALL LEVEL FUNCTION HERE
-			}, 
+			},
 		};
 
 		// Call a function to open up a selected level based on number
 		//based on passed in integer. calls the the fucntion stored in the level map correspodning to integer
 		//if the level doesn't exist then we go to result screen
-		const levelFn = levelMap[levelNumber]; 
-		if (levelFn)  
-			{
+		const levelFn = levelMap[levelNumber];
+		if (levelFn) {
 			levelFn();
 		} else {
 			console.warn(`Level ${levelNumber} not implemented yet`);
 			this.screenSwitcher.switchToScreen({
 				type: "result",
 				score: this.model.getScore(),
-       		 }); //by default go to result screen if nothing implemented
+			}); //by default go to result screen if nothing implemented
 		}
 	}
 
