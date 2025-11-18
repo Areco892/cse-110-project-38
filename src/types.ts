@@ -18,7 +18,9 @@ export type Screen =
 	| { type: "menu" }
 	| { type: "game"; level?: number }
 	| { type: "result"; score: number }
-	| {type: "select"};
+	| { type: "select" };
+
+export type Position = { x: number, y: number };
 
 export abstract class ScreenController {
 	abstract getView(): View;

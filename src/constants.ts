@@ -5,3 +5,7 @@ export const STAGE_HEIGHT = window.innerHeight;
 // Game settings
 export const GAME_DURATION = 10; // seconds
 export const LEVEL_AMOUNT = 5; //number of levels
+
+// Player and Enemy positions
+export const PLAYER_POSITION = { x: 150, y: 500 }
+export const ENEMY_POSITION = { x: 750, y: 500 };
