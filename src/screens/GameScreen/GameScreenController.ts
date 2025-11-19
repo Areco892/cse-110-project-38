@@ -47,7 +47,7 @@ export class GameScreenController extends ScreenController {
 	}
 
 	/**
-	 * Handle lemon click event
+	 * Handle events
 	 */
 	private handlePauseClick(): void {
 		this.view.togglePauseOverlay()
@@ -68,10 +68,16 @@ export class GameScreenController extends ScreenController {
 	}
 
 	private checkEnter(event: KeyboardEvent): void {
-		if (event.keyCode == 13) {
-			this.playerInput = this.view.getAns()
-			this.view.resetAnsBox()
-			this.view.updateText(this.playerInput)
+		if (event.key !== "Enter") {
+			return
+		}
+		const answer = this.view.getAns();
+		if (this.model.isCorrect(answer)) {
+			this.model.attackEnemy();
+			this.view.attackEnemy();
+		} else {
+			this.model.attackPlayer();
+			this.view.attackPlayer();
 		}
 	}
 	/*

@@ -19,7 +19,7 @@ import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
 class App implements ScreenSwitcher {
 	private stage: Konva.Stage;
 	private layer: Konva.Layer;
-	
+
 	private levelController: LevelScreenController;  //LEVEL SELECT SCREEN
 	private menuController: MenuScreenController;
 	private gameController: GameScreenController;
@@ -53,7 +53,7 @@ class App implements ScreenSwitcher {
 
 
 		// Draw the layer (render everything to the canvas)
-		this.layer.draw()
+		this.layer.draw();
 
 		// Start with menu screen visible
 		this.menuController.getView().show();
@@ -86,8 +86,7 @@ class App implements ScreenSwitcher {
 				if (screen.level !== undefined)  //game needs to be remade
 				{
 					this.gameController.startLevel(screen.level); // pass the selected level
-				} else 
-				{
+				} else {
 					this.gameController.startGame(); // normal game start
 				}
 				break;
