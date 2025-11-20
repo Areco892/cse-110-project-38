@@ -1,13 +1,12 @@
 import { Character } from "../../components/Character";
-import { PLAYER_POSITION, ENEMY_POSITION } from "../../constants";
 
 /**
  * GameScreenModel - Manages game state
  */
 export class GameScreenModel {
 	private score = 0;
-	private player: Character = new Character(100, 100 / 3, PLAYER_POSITION);
-	private enemy: Character = new Character(100, 100 / 3, ENEMY_POSITION);
+	private player: Character = new Character(100, 100 / 3);
+	private enemy: Character = new Character(100, 100 / 3);
 	private question_bank: string[] = ["2+2", "3+3"];
 	private current_question: number = 0;
 	private answer_bank: string[] = ["4", "6"];
@@ -16,10 +15,8 @@ export class GameScreenModel {
 	 * Reset game state for a new game
 	 */
 	reset(): void {
-		this.player.health = 100;
-		this.player.isAlive = true;
-		this.enemy.health = 100;
-		this.enemy.isAlive = true;
+		this.player.reset();
+		this.enemy.reset();
 		this.score = 0;
 	}
 
@@ -51,6 +48,14 @@ export class GameScreenModel {
 
 	getEnemyHealth(): number {
 		return this.enemy.getHealth();
+	}
+
+	isPlayerAlive(): boolean {
+		return this.player.getIsAlive();
+	}
+
+	isEnemyAlive(): boolean {
+		return this.enemy.getIsAlive();
 	}
 
 	/**

@@ -7,5 +7,5 @@ export const GAME_DURATION = 10; // seconds
 export const LEVEL_AMOUNT = 5; //number of levels
 
 // Player and Enemy positions
-export const PLAYER_POSITION = { x: 175, y: 380 }
+export const PLAYER_POSITION = { x: 175, y: 380 };
 export const ENEMY_POSITION = { x: 625, y: 380 };

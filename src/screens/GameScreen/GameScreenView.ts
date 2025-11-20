@@ -1,6 +1,7 @@
 import Konva from "konva"
 import type { View } from "../../types.ts"
-import { STAGE_WIDTH, STAGE_HEIGHT } from "../../constants.ts"
+import { STAGE_WIDTH, STAGE_HEIGHT, GAME_DURATION } from "../../constants.ts"
+import { PLAYER_POSITION, ENEMY_POSITION } from "../../constants";
 import { Layer } from "konva/lib/Layer"
 
 /**
@@ -24,6 +25,7 @@ export class GameScreenView implements View {
 	private playerInputGroup: Konva.Group
 	private questText: Konva.Text
 	private ansText: Konva.Text
+	private timerText: Konva.Text
 	private inputTextArea: HTMLTextAreaElement
 	private gameScreen: Konva.Group
 	private level1: Konva.Group
@@ -55,6 +57,7 @@ export class GameScreenView implements View {
 		this.playerInputGroup = new Konva.Group({ visible: true })
 		this.ansText = new Konva.Text
 		this.questText = new Konva.Text
+		this.timerText = new Konva.Text
 		this.inputTextArea = document.createElement('textarea')
 		this.level1 = new Konva.Group({ visible: false })
 		this.level2 = new Konva.Group({ visible: false })
@@ -76,9 +79,10 @@ export class GameScreenView implements View {
 		this.gameScreen.scaleX(STAGE_WIDTH / 800)
 		this.gameScreen.scaleY(STAGE_HEIGHT / 600)
 	}
+
 	/**
- * Show a temporary level screen dynamically
- */
+	 * Show a temporary level screen dynamically
+	 */
 	showTempLevel(levelNumber: number): void {
 		// Remove old temp level if exists
 		if (this.tempLevelGroup) {
@@ -148,8 +152,9 @@ export class GameScreenView implements View {
 		this.gameScreen.getLayer()?.draw()
 	}
 
-
-	// helper functions 
+	/**
+	 * Helper functions
+	 */
 	getGroup(): Konva.Group {
 		return this.gameScreen
 	}
@@ -163,7 +168,7 @@ export class GameScreenView implements View {
 	}
 
 	getAns(): string {
-		return this.ansText.text()
+		return this.ansText.text().trim();
 	}
 
 	updateAnsBox(): void {
@@ -179,8 +184,9 @@ export class GameScreenView implements View {
 		this.questText.text('Current Input: \n' + playerInput)
 	}
 
-
-	// create levels
+	/**
+	 * Level creation
+	 */
 	createLevel1(): void {
 
 		// dawn background
@@ -199,6 +205,7 @@ export class GameScreenView implements View {
 		// create enemy
 		this.addEnemy()
 		this.addEnemyAttack()
+
 		// create towers
 		this.addDayCastle()
 
@@ -355,8 +362,9 @@ export class GameScreenView implements View {
 
 	}
 
-
-	// create level components
+	/**
+	 * Level components
+	 */
 	addBgDay(): void {
 		const bgDay = new Konva.Rect({
 			x: 0,
@@ -673,12 +681,24 @@ export class GameScreenView implements View {
 			align: 'center'
 		});
 
+		// Timer display 
+		this.timerText = new Konva.Text({
+			x: 340,
+			y: 10,
+			text: `Time: ${GAME_DURATION}`,
+			fontSize: 32,
+			fontFamily: "Arial",
+			fill: "gold",
+			stroke: "red",
+			strokeWidth: 1,
+		});
+
+		// Input display
 		this.inputTextArea = document.createElement('textarea')
 		document.body.appendChild(this.inputTextArea)
 		this.inputTextArea.style.position = 'absolute'
 		this.inputTextArea.style.display = 'none'
 		this.inputTextArea.style.zIndex = '0'
-
 
 		this.playerInputGroup.on('click', () => {
 			var textPosition = this.ansText.absolutePosition();
@@ -702,6 +722,7 @@ export class GameScreenView implements View {
 		this.gameUI.add(this.questText)
 		this.playerInputGroup.add(ansBox)
 		this.playerInputGroup.add(this.ansText)
+		this.gameUI.add(this.timerText)
 		this.gameUI.add(this.playerInputGroup)
 	}
 	addPauseUI(): void {
@@ -839,6 +860,28 @@ export class GameScreenView implements View {
 			stroke: 'black',
 			strokeWidth: 3,
 		})
+		var fullHealth = new Konva.Rect({
+			name: 'full',
+			x: -50,
+			y: -40,
+			width: 100,
+			height: 10,
+			fill: 'gray',
+			stroke: 'black',
+			strokeWidth: 3,
+			cornerRadius: [10, 10, 10, 10],
+		})
+		var remainingHealth = new Konva.Rect({
+			name: 'remaining',
+			x: -50,
+			y: -40,
+			width: 100,
+			height: 10,
+			fill: 'green',
+			stroke: 'black',
+			strokeWidth: 3,
+			cornerRadius: [10, 10, 10, 10],
+		})
 
 		this.player.add(charHead)
 		this.player.add(charBody)
@@ -850,8 +893,11 @@ export class GameScreenView implements View {
 		this.player.add(bowArc)
 		this.player.add(arrow)
 		this.player.add(arrowHead)
-		this.player.x(175)
-		this.player.y(380)
+		this.player.add(fullHealth)
+		this.player.add(remainingHealth)
+		this.player.x(PLAYER_POSITION.x)
+		this.player.y(PLAYER_POSITION.y)
+
 	}
 	addPlayerAttack(): void {
 		var arrow = new Konva.Line({
@@ -934,6 +980,28 @@ export class GameScreenView implements View {
 			stroke: 'black',
 			strokeWidth: 3,
 		})
+		var fullHealth = new Konva.Rect({
+			name: 'full',
+			x: -50,
+			y: -40,
+			width: 100,
+			height: 10,
+			fill: 'gray',
+			stroke: 'black',
+			strokeWidth: 3,
+			cornerRadius: [10, 10, 10, 10],
+		})
+		var remainingHealth = new Konva.Rect({
+			name: 'remaining',
+			x: -50,
+			y: -40,
+			width: 100,
+			height: 10,
+			fill: 'green',
+			stroke: 'black',
+			strokeWidth: 3,
+			cornerRadius: [10, 10, 10, 10],
+		})
 
 		this.enemy.add(wizHead)
 		this.enemy.add(wizBody)
@@ -944,8 +1012,10 @@ export class GameScreenView implements View {
 		this.enemy.add(wizArms)
 		this.enemy.add(wizStaff)
 		this.enemy.add(wizOrb)
-		this.enemy.x(625)
-		this.enemy.y(380)
+		this.enemy.add(fullHealth)
+		this.enemy.add(remainingHealth)
+		this.enemy.x(ENEMY_POSITION.x)
+		this.enemy.y(ENEMY_POSITION.y)
 	}
 	addEnemyAttack(): void {
 		var wizOrb = new Konva.Circle({
@@ -961,7 +1031,6 @@ export class GameScreenView implements View {
 		this.enemyAttack.x(625)
 		this.enemyAttack.y(380)
 	}
-
 	addDayCastle(): void {
 		var castle1 = new Konva.Rect({
 			x: 0,
@@ -1139,49 +1208,113 @@ export class GameScreenView implements View {
 		this.nightCastle.add(nightWindow3)
 	}
 
-	attackPlayer() {
-		this.playAttack(this.enemy, this.player, this.enemyAttack);
+	/**
+	 *	Character and characterAttack animations helper functions
+	 */
+	attackPlayer(remaining: number) {
+		return this.playAttack(this.enemy, this.player, this.enemyAttack, remaining);
 	}
 
-	attackEnemy() {
-		this.playAttack(this.player, this.enemy, this.playerAttack);
+	attackEnemy(remaining: number) {
+		return this.playAttack(this.player, this.enemy, this.playerAttack, remaining);
 	}
 
-	playAttack(from: Konva.Group, to: Konva.Group, attackSprite: Konva.Group): void {
-		const startX = from.x();
-		const startY = from.y();
-		const targetX = to.x();
-		const targetY = to.y();
-		const direction = startX < targetX ? 1 : -1
+	playAttack(from: Konva.Group, to: Konva.Group, attackSprite: Konva.Group, remaining: number): Promise<void> {
+		return new Promise((resolve) => {
+			const startX = from.x();
+			const startY = from.y();
+			const targetX = to.x();
+			const targetY = to.y();
+			const direction = startX < targetX ? 1 : -1;
 
-		attackSprite.scale({ x: direction, y: 1 })
-		attackSprite.position({ x: direction == 1 ? startX : startX - 75, y: startY });
-		attackSprite.opacity(1);
-		this.gameScreen.add(attackSprite);
+			attackSprite.scale({ x: direction, y: 1 });
+			attackSprite.position({ x: direction === 1 ? startX : startX - 75, y: startY });
+			attackSprite.opacity(1);
+			this.gameScreen.add(attackSprite);
 
-		const attackTween = new Konva.Tween({
-			node: attackSprite,
-			x: targetX - 35,
-			y: targetY,
-			duration: 1,
-			easing: Konva.Easings.EaseIn,
-			onFinish: () => {
-				const impactTween = new Konva.Tween({
-					node: attackSprite,
-					duration: 0.2,
-					easing: Konva.Easings.EaseOut,
-					onFinish: () => {
-						attackSprite.opacity(0);
-						attackSprite.remove();
-						this.gameScreen.getLayer()?.draw();
-					}
-				});
-				impactTween.play();
-			}
-		})
-		attackTween.play();
+			const attackTween = new Konva.Tween({
+				node: attackSprite,
+				x: targetX - 35,
+				y: targetY,
+				duration: 1,
+				easing: Konva.Easings.EaseIn,
+				onFinish: () => {
+
+					const impactTween = new Konva.Tween({
+						node: attackSprite,
+						duration: 0.2,
+						easing: Konva.Easings.EaseOut,
+						onFinish: () => {
+
+							this.playHitEffect(to);
+
+							attackSprite.opacity(0);
+							attackSprite.remove();
+							this.updateHealth(to, remaining);
+							resolve();  // ⬅️ animation completely finished
+						}
+					});
+
+					impactTween.play();
+				}
+			});
+
+			attackTween.play();
+		});
 	}
-	// create event handlers
+
+	updateHealth(to: Konva.Group, remaining: number) {
+		let remainingHealth = to.findOne('.remaining') as Konva.Rect;
+		const fullHealth = to.findOne('.full') as Konva.Rect;
+		remainingHealth.width((remaining / 100) * fullHealth.width())
+	}
+
+	playHitEffect(character: Konva.Group): void {
+		const originalFilter = character.filters();
+		const redFilter = Konva.Filters.RGBA;
+
+		character.cache();
+		character.filters([redFilter]);
+		character.red(255);
+		character.green(40);
+		character.blue(40);
+
+		setTimeout(() => {
+			character.filters(originalFilter);
+			character.clearCache();
+		}, 150);
+	}
+
+	playerDefeated() {
+		return this.playDefeat(this.player);
+	}
+
+	enemyDefeated() {
+		return this.playDefeat(this.enemy);
+	}
+
+	async playDefeat(character: Konva.Group): Promise<void> {
+		return new Promise((resolve) => {
+			new Konva.Tween({
+				node: character,
+				opacity: 0,
+				scaleX: 0.3,
+				scaleY: 0.3,
+				duration: 0.5,
+				easing: Konva.Easings.EaseIn,
+				onFinish: () => {
+					character.visible(false);
+					character.opacity(1);
+					character.scale({ x: 1, y: 1 });
+					resolve();
+				}
+			}).play();
+		});
+	}
+
+	/**
+	 * Event Handlers
+	 */
 	createEventHandlers(onPauseClick: () => void, onResumeClick: () => void, onQuitClick: () => void, onKeyPress: () => void, onEnter: (event: KeyboardEvent) => void): void {
 		this.pauseGroup.on('click', onPauseClick)
 		this.resumeGroup.on('click', onResumeClick)
@@ -1190,6 +1323,33 @@ export class GameScreenView implements View {
 		this.inputTextArea.addEventListener('keydown', (e) => onEnter(e))
 	}
 
+	/**
+	 * Update timer display
+	 */
+	updateTimer(timeRemaining: number): void {
+		this.timerText.text(`Time: ${timeRemaining}`);
+		this.gameUI.getLayer()?.draw();
+	}
 
+	/**
+	 * Reset the view
+	 */
+	reset() {
+
+		this.resetAnsBox();
+
+		this.player.visible(true);
+		this.enemy.visible(true);
+
+		let playerRemainingHealth = this.player.findOne(".remaining") as Konva.Rect;
+		let playerFullHealth = this.player.findOne(".full") as Konva.Rect;
+		playerRemainingHealth.width(playerFullHealth.width());
+
+		let enemyRemainingHealth = this.enemy.findOne(".remaining") as Konva.Rect;
+		let enemyFullHealth = this.enemy.findOne(".full") as Konva.Rect;
+		enemyRemainingHealth.width(enemyFullHealth.width());
+
+		this.updateTimer(GAME_DURATION);
+	}
 
 }

@@ -1,23 +1,18 @@
-import type { Position } from "../types";
-
 export class Character {
     /**
      * Properties 
      */
-    health: number;
-    damage: number;
-    isAlive: boolean;
-    position: Position;
-    /* Position will be needed in order to determine if the character gets hit */
+    private health: number;
+    private damage: number;
+    private isAlive: boolean;
 
     /** 
      * Constructor 
      */
-    constructor(health: number, damage: number, position: Position) {
+    constructor(health: number, damage: number) {
         this.health = health || 100;
         this.damage = damage || 100 / 3;
         this.isAlive = true;
-        this.position = position || { x: 0, y: 0 };
     }
 
     /**
@@ -36,8 +31,13 @@ export class Character {
         return this.health;
     }
 
-    getPosition(): Position {
-        return this.position;
+    getIsAlive(): boolean {
+        return this.isAlive;
+    }
+
+    reset(): void {
+        this.health = 100;
+        this.isAlive = true;
     }
 
     protected defeat(): void {

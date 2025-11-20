@@ -3,7 +3,6 @@ import type { ScreenSwitcher } from "../../types.ts";
 import { GameScreenModel } from "./GameScreenModel.ts";
 import { GameScreenView } from "./GameScreenView.ts";
 import { GAME_DURATION } from "../../constants.ts";
-import Konva from "konva"
 
 
 /**
@@ -15,6 +14,8 @@ export class GameScreenController extends ScreenController {
 	private screenSwitcher: ScreenSwitcher;
 	private gameTimer: number | null = null;
 	private playerInput: string
+	private isAnimating: boolean = false;
+	private numStars: number = 0;
 
 	constructor(screenSwitcher: ScreenSwitcher) {
 		super();
@@ -31,15 +32,32 @@ export class GameScreenController extends ScreenController {
 	startGame(): void {
 		// Reset model state
 		this.model.reset();
+		this.view.reset();
+		this.numStars = 0;
 
 		this.view.show();
+		this.startTimer();
+	}
+
+	/**
+	 * Start the countdown timer
+	 */
+	private startTimer(): void {
+		let timeRemaining = GAME_DURATION;
+		const timerID = setInterval(() => {
+			timeRemaining -= 1;
+			this.view.updateTimer(timeRemaining);
+			if (timeRemaining <= 0) {
+				this.endGame();
+			}
+		}, 1000)
+		this.gameTimer = timerID;
 	}
 
 	/**
 	 * Stop the timer
 	 */
 	private stopTimer(): void {
-		// TODO: Task 3 - Stop the timer using clearInterval
 		if (this.gameTimer != null) {
 			clearInterval(this.gameTimer);
 			this.gameTimer = null;
@@ -47,7 +65,15 @@ export class GameScreenController extends ScreenController {
 	}
 
 	/**
-	 * Handle events
+	 * End the game
+	 */
+	private endGame(): void {
+		this.stopTimer();
+		this.screenSwitcher.switchToScreen({ type: "result" });
+	}
+
+	/**
+	 * Handle Game UI related events
 	 */
 	private handlePauseClick(): void {
 		this.view.togglePauseOverlay()
@@ -61,25 +87,51 @@ export class GameScreenController extends ScreenController {
 		this.view.togglePauseOverlay()
 		this.view.resetAnsBox()
 		this.screenSwitcher.switchToScreen({ type: 'menu' })
+		this.numStars = 0;
+		localStorage.setItem("numStars", JSON.stringify(this.numStars));
+		this.stopTimer();
 	}
 
 	private handleKeyPress(): void {
 		this.view.updateAnsBox()
 	}
 
-	private checkEnter(event: KeyboardEvent): void {
-		if (event.key !== "Enter") {
-			return
-		}
+	/**
+	 * Handle gameplay (user input) events
+	 */
+	private async checkEnter(event: KeyboardEvent): Promise<void> {
+		if (event.key !== "Enter") { return };
+		if (this.isAnimating) { return };
+
+		this.isAnimating = true;
+
 		const answer = this.view.getAns();
 		if (this.model.isCorrect(answer)) {
 			this.model.attackEnemy();
-			this.view.attackEnemy();
+			await this.view.attackEnemy(this.model.getEnemyHealth());
+			this.numStars += 1;
+			localStorage.setItem("numStars", JSON.stringify(this.numStars));
+			if (!this.model.isEnemyAlive()) {
+				await this.view.enemyDefeated();
+				if (this.gameTimer) {
+					this.screenSwitcher.switchToScreen({ type: 'result' });
+					this.stopTimer();
+				}
+			}
 		} else {
 			this.model.attackPlayer();
-			this.view.attackPlayer();
+			await this.view.attackPlayer(this.model.getPlayerHealth());
+			if (!this.model.isPlayerAlive()) {
+				await this.view.playerDefeated();
+				if (this.gameTimer) {
+					this.screenSwitcher.switchToScreen({ type: 'result' });
+					this.stopTimer();
+				}
+			}
 		}
+		this.isAnimating = false;
 	}
+
 	/*
 	 * Get the view group
 	 */
