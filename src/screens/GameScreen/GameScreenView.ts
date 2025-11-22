@@ -58,21 +58,18 @@ export class GameScreenView implements View {
 		this.ansText = new Konva.Text
 		this.questText = new Konva.Text
 		this.timerText = new Konva.Text
-		this.inputTextArea = document.createElement('textarea')
 		this.level1 = new Konva.Group({ visible: false })
 		this.level2 = new Konva.Group({ visible: false })
 		this.level3 = new Konva.Group({ visible: false })
 		this.level4 = new Konva.Group({ visible: false })
 		this.level5 = new Konva.Group({ visible: false })
 		this.gameScreen = new Konva.Group({ visible: false })
-
-		//initialize visual components
-		this.createLevel1()
-		// this.createLevel2()
-		// this.createLevel3()
-		// this.createLevel4()
-		// this.createLevel5()
-
+		this.inputTextArea = document.createElement('textarea')
+		document.body.appendChild(this.inputTextArea)
+		this.inputTextArea.style.position = 'absolute'
+		this.inputTextArea.style.display = 'none'
+		this.inputTextArea.style.zIndex = '0'
+		//initialize visual components and event handlers
 		this.createEventHandlers(onPauseClick, onResumeClick, onQuitClick, onKeyPress, onEnter)
 
 		// scale to screen
@@ -80,6 +77,48 @@ export class GameScreenView implements View {
 		this.gameScreen.scaleY(STAGE_HEIGHT / 600)
 	}
 
+	resetGameScreen(): void {
+		this.gameScreen.destroyChildren();
+
+		// Ensure the DOM textarea used for input is hidden/blurred when resetting
+		if (this.inputTextArea) {
+			this.inputTextArea.style.display = 'none';
+			this.inputTextArea.value = '';
+			try { this.inputTextArea.blur(); } catch (e) { /* ignore */ }
+		}
+	}
+
+	setLevel(levelNumber: number): void {
+		this.level1.hide()
+		this.level2.hide()
+		this.level3.hide()
+		this.level4.hide()
+		this.level5.hide()
+
+		switch (levelNumber) {
+			case 1: 
+				this.createLevel1()
+				this.level1.show();
+				break;
+			case 2: 
+				this.createLevel2()
+				this.level2.show();
+				break;
+			case 3: 
+				this.createLevel3()
+				this.level3.show();
+				break;
+			case 4: 
+				// this.createLevel4()
+				this.level4.show();
+				break;
+			case 5: 
+				// this.createLevel5()
+				this.level5.show();
+				break; 
+
+		}
+	}
 	/**
 	 * Show a temporary level screen dynamically
 	 */
@@ -168,7 +207,7 @@ export class GameScreenView implements View {
 	}
 
 	getAns(): string {
-		return this.ansText.text().trim();
+		return this.ansText.text().trim().replace(/ /g, '')
 	}
 
 	updateAnsBox(): void {
@@ -693,12 +732,7 @@ export class GameScreenView implements View {
 			strokeWidth: 1,
 		});
 
-		// Input display
-		this.inputTextArea = document.createElement('textarea')
-		document.body.appendChild(this.inputTextArea)
-		this.inputTextArea.style.position = 'absolute'
-		this.inputTextArea.style.display = 'none'
-		this.inputTextArea.style.zIndex = '0'
+		// Input display (textarea created in constructor)
 
 		this.playerInputGroup.on('click', () => {
 			var textPosition = this.ansText.absolutePosition();
@@ -1327,7 +1361,7 @@ export class GameScreenView implements View {
 	 * Update timer display
 	 */
 	updateTimer(timeRemaining: number): void {
-		this.timerText.text(`Time: ${timeRemaining}`);
+		this.timerText.text(`Time: ${Math.floor(timeRemaining)}`);
 		this.gameUI.getLayer()?.draw();
 	}
 

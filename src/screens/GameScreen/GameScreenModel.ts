@@ -9,7 +9,7 @@ export class GameScreenModel {
 	private enemy: Character = new Character(100, 100 / 3);
 	private question_bank: string[] = ["2+2", "3+3"];
 	private current_question: number = 0;
-	private answer_bank: string[] = ["4", "6"];
+	private answer_bank: string[] = ["46", "6"];
 
 	/**
 	 * Reset game state for a new game

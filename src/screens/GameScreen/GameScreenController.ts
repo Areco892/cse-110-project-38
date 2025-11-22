@@ -13,9 +13,10 @@ export class GameScreenController extends ScreenController {
 	private view: GameScreenView;
 	private screenSwitcher: ScreenSwitcher;
 	private gameTimer: number | null = null;
-	private playerInput: string
 	private isAnimating: boolean = false;
 	private numStars: number = 0;
+	private playerInput: string = '';
+	private paused: boolean = false;
 
 	constructor(screenSwitcher: ScreenSwitcher) {
 		super();
@@ -23,7 +24,7 @@ export class GameScreenController extends ScreenController {
 
 		this.model = new GameScreenModel();
 		this.view = new GameScreenView(() => this.handlePauseClick(), () => this.handleResumeClick(), () => this.handleQuitClick(), () => this.handleKeyPress(), (event: KeyboardEvent) => this.checkEnter(event));
-		this.playerInput = ''
+		
 	}
 
 	/**
@@ -45,12 +46,14 @@ export class GameScreenController extends ScreenController {
 	private startTimer(): void {
 		let timeRemaining = GAME_DURATION;
 		const timerID = setInterval(() => {
-			timeRemaining -= 1;
-			this.view.updateTimer(timeRemaining);
-			if (timeRemaining <= 0) {
-				this.endGame();
+			if(!this.paused) {
+				timeRemaining -= 0.01;
+				this.view.updateTimer(timeRemaining);
+				if (timeRemaining <= 0) {
+					this.endGame();
+				}
 			}
-		}, 1000)
+		}, 10)
 		this.gameTimer = timerID;
 	}
 
@@ -77,10 +80,12 @@ export class GameScreenController extends ScreenController {
 	 */
 	private handlePauseClick(): void {
 		this.view.togglePauseOverlay()
+		this.paused = true;
 	}
 
 	private handleResumeClick(): void {
 		this.view.togglePauseOverlay()
+		this.paused = false;
 	}
 
 	private handleQuitClick(): void {
@@ -88,7 +93,9 @@ export class GameScreenController extends ScreenController {
 		this.view.resetAnsBox()
 		this.screenSwitcher.switchToScreen({ type: 'menu' })
 		this.numStars = 0;
+		this.paused = false;
 		localStorage.setItem("numStars", JSON.stringify(this.numStars));
+		this.view.resetGameScreen()
 		this.stopTimer();
 	}
 
@@ -105,8 +112,9 @@ export class GameScreenController extends ScreenController {
 
 		this.isAnimating = true;
 
-		const answer = this.view.getAns();
-		if (this.model.isCorrect(answer)) {
+		this.playerInput = this.view.getAns();
+		this.view.resetAnsBox();
+		if (this.model.isCorrect(this.playerInput)) {
 			this.model.attackEnemy();
 			await this.view.attackEnemy(this.model.getEnemyHealth());
 			this.numStars += 1;
@@ -163,17 +171,22 @@ export class GameScreenController extends ScreenController {
 			1: () => {
 				console.log("Starting Level 1");
 				// Normal game logic 
-				this.startGame();  //TODO CHANGE TO REAL LEVEL LOGIC CALL LEVEL FUNCTION HERE
+				this.view.setLevel(1); // ensure level groups exist before reset/show
+				this.startGame();
 			},
 			2: () => {
 				console.log("Starting Level 2");
-				this.startTempLevel(2); //TODO CHANGE TO REAL LEVEL LOGIC CALL LEVEL FUNCTION HERE
+				this.view.setLevel(2);
+				this.startGame();
 			},
 			3: () => {
 				console.log("Starting Level 3");
-				this.startTempLevel(3); //TODO CHANGE TO REAL LEVEL LOGIC CALL LEVEL FUNCTION HERE
+				this.view.setLevel(3);
+				this.startGame();
 			},
 		};
+
+		this.view.resetGameScreen();
 
 		// Call a function to open up a selected level based on number
 		//based on passed in integer. calls the the fucntion stored in the level map correspodning to integer
