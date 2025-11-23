@@ -6,8 +6,8 @@ import { Character } from "../../components/Character";
 export class GameScreenModel {
 	private score = 0;
 	private level: number = 1;
-	private player: Character = new Character(100, 100 / 1);
-	private enemy: Character = new Character(100, 100 / 5);
+	private player: Character = new Character(100, 100 / 3); //100 hp 33 damage
+	private enemy: Character = new Character(100, 100 / 4); //100 hp 20 damage
 	private current_question: number = 0;
 
 	// questions and answers for level 1-5
@@ -183,6 +183,10 @@ export class GameScreenModel {
 
 	attackPlayer(): void {
 		this.enemy.attack(this.player);
+	}
+	autoAttackPlayer(): void
+	{
+		this.enemy.autoAttack(this.player);
 	}
 
 	attackEnemy(): void {

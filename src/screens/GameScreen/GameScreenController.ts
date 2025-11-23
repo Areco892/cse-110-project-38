@@ -40,6 +40,8 @@ export class GameScreenController extends ScreenController {
 		this.model.genQuestion();
 		this.view.displayQuestion(this.model.getQuestion());
 		this.startTimer();
+		 
+    	this.startAutoAttacks();  // Start automated attacks every 10% of total game time
 	}
 
 	/**
@@ -74,7 +76,9 @@ export class GameScreenController extends ScreenController {
 	 */
 	private endGame(): void {
 		this.stopTimer();
-		this.screenSwitcher.switchToScreen({ type: "result" });
+		this.screenSwitcher.switchToScreen({ type: 'result',
+						score: 0,
+					}); //set score as player hp
 	}
 
 	/**
@@ -107,6 +111,7 @@ export class GameScreenController extends ScreenController {
 
 	/**
 	 * Handle gameplay (user input) events
+	 * this occurs any time enter is pressed
 	 */
 	private async checkEnter(event: KeyboardEvent): Promise<void> {
 		if (event.key !== "Enter" || this.view.getAns() == "") { return };
@@ -123,11 +128,13 @@ export class GameScreenController extends ScreenController {
 			if (!this.model.isEnemyAlive()) {
 				await this.view.enemyDefeated();
 				if (this.gameTimer) {
-					this.screenSwitcher.switchToScreen({ type: 'result' });
+					this.screenSwitcher.switchToScreen({ type: 'result',
+						score: this.model.getPlayerHealth(),
+					}); //set score as player hp
 					this.stopTimer();
 				}
 			}
-			this.model.genQuestion();
+			this.model.genQuestion(); //
 		} else {
 			this.model.attackPlayer();
 			await this.view.attackPlayer(this.model.getPlayerHealth());
@@ -142,7 +149,10 @@ export class GameScreenController extends ScreenController {
 				await this.view.playerDefeated();
 				this.numStars = 0;
 				if (this.gameTimer) {
-					this.screenSwitcher.switchToScreen({ type: 'result' });
+					
+					this.screenSwitcher.switchToScreen({ type: 'result',
+						score: this.model.getPlayerHealth(),
+					}); //set score as player hp
 					this.stopTimer();
 				}
 			}
@@ -150,6 +160,60 @@ export class GameScreenController extends ScreenController {
 		this.isAnimating = false;
 		this.view.displayQuestion(this.model.getQuestion());
 	}
+
+
+		/**
+	 * Start automated enemy attacks at every 10% of game duration
+	 */
+	private startAutoAttacks(): void {
+		const interval = GAME_DURATION / 10; // 10% of total game time
+		let attackCount = 0;
+		const totalAttacks = 10;
+
+		const attackInterval = setInterval(async () => {
+			if (this.paused) return;
+			
+			if (!this.model.isPlayerAlive()) {
+				clearInterval(attackInterval);
+				return;
+			}
+
+			attackCount++;
+
+			// Trigger attack at multiples of 10% of GAME_DURATION
+			this.model.autoAttackPlayer();
+			await this.view.autoAttackPlayer(this.model.getPlayerHealth());
+
+			// Update stars based on health
+			if (this.model.getPlayerHealth() <= 40) {
+				this.numStars = 1;
+			} else if (this.model.getPlayerHealth() <= 80) {
+				this.numStars = 2;
+			} else {
+				this.numStars = 3;
+			}
+
+			if (!this.model.isPlayerAlive()) {
+				await this.view.playerDefeated();
+				this.numStars = 0;
+
+				if (this.gameTimer) {
+					this.screenSwitcher.switchToScreen({
+						type: 'result',
+						score: this.model.getPlayerHealth(),
+					});
+					this.stopTimer();
+				}
+				clearInterval(attackInterval);
+			}
+
+			// Stop after 10 attacks
+			if (attackCount >= totalAttacks) {
+				clearInterval(attackInterval);
+			}
+		}, interval * 1000); // Convert to milliseconds
+	}	
+
 
 	/*
 	 * Get the view group
@@ -167,7 +231,7 @@ export class GameScreenController extends ScreenController {
 	}
 
 	/**
- * Start a specific level (efficient dispatch)
+ * Start a specific level 
  * @param levelNumber - Index of the level to start
  */
 	startLevel(levelNumber: number): void {
