@@ -27,7 +27,7 @@ export class MenuScreenView implements View {
 			offsetY: STAGE_HEIGHT / 2,
 		});
 		this.group.add(this.background);
-		Konva.Image.fromURL("public/sky bridge.png", (image) => {
+		Konva.Image.fromURL("sky bridge.png", (image) => {
 			// Set position to the center of the stage
 			image.x(STAGE_WIDTH / 2);
 			image.y(STAGE_HEIGHT / 2); // <-- use STAGE_HEIGHT for vertical centering
