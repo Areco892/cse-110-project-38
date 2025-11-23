@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { GameScreenModel } from '../../src/screens/GameScreen/GameScreenModel'
+import { GameScreenModel } from '../../../src/screens/GameScreen/GameScreenModel'
 
 describe('GameScreenModel - Auto Attack', () => {
   let model: GameScreenModel
