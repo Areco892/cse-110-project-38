@@ -26,6 +26,17 @@ export class Character {
             target.defeat();
         }
     }
+     /**
+     * Auto-attack: deal 10% of target's max health  
+     */
+    autoAttack(target: Character): void { 
+        const damage = target.damage * 0.3; // 10% of target's max health
+        target.health -= damage;
+        if (target.health <= 0) {
+            target.health = 0;
+            target.defeat();  //takes 5 hits to kill
+        }
+    }
 
     getHealth(): number {
         return this.health;

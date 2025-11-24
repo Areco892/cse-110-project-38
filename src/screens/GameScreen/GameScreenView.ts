@@ -1295,6 +1295,85 @@ export class GameScreenView implements View {
 		});
 	}
 
+	/**
+ * Auto-attack animations with spinning star projectile
+ */
+	addEnemyAutoAttack(): void {
+		var autoAttackStar = new Konva.Star({
+			x: 0,
+			y: 0,
+			numPoints: 5,
+			innerRadius: 8,
+			outerRadius: 15,
+			fill: 'blue',
+			stroke: 'darkblue',
+			strokeWidth: 2,
+		});
+		this.enemyAttack.add(autoAttackStar);
+	}
+
+	autoAttackPlayer(remaining: number) {
+		return this.playAutoAttack(this.enemy, this.player, remaining);
+	}
+
+	playAutoAttack(from: Konva.Group, to: Konva.Group, remaining: number): Promise<void> {
+		return new Promise((resolve) => {
+			const startX = from.x();
+			const startY = from.y();
+			const targetX = to.x();
+			const targetY = to.y();
+
+			// Create a temporary star sprite for this attack
+			const autoAttackSprite = new Konva.Star({
+				x: startX,
+				y: startY,
+				numPoints: 5,
+				innerRadius: 8,
+				outerRadius: 15,
+				fill: 'blue',
+				stroke: 'darkblue',
+				strokeWidth: 2,
+				opacity: 1,
+			});
+
+			this.gameScreen.add(autoAttackSprite);
+
+			// Spinning animation
+			const spinTween = new Konva.Tween({
+				node: autoAttackSprite,
+				rotation: 360,
+				duration: 1,
+				easing: Konva.Easings.Linear,
+			});
+
+			const attackTween = new Konva.Tween({
+				node: autoAttackSprite,
+				x: targetX,
+				y: targetY,
+				duration: 1,
+				easing: Konva.Easings.EaseIn,
+				onFinish: () => {
+					const impactTween = new Konva.Tween({
+						node: autoAttackSprite,
+						scaleX: 0.5,
+						scaleY: 0.5,
+						duration: 0.2,
+						easing: Konva.Easings.EaseOut,
+						onFinish: () => {
+							this.playHitEffect(to);
+							autoAttackSprite.destroy();
+							this.updateHealth(to, remaining);
+							resolve();
+						}
+					});
+					impactTween.play();
+				}
+			});
+
+			spinTween.play();
+			attackTween.play();
+		});
+	}
 	updateHealth(to: Konva.Group, remaining: number) {
 		let remainingHealth = to.findOne('.remaining') as Konva.Rect;
 		const fullHealth = to.findOne('.full') as Konva.Rect;
