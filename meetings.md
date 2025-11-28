@@ -97,4 +97,42 @@ Anthony - Level manager: progress level and maintaining program integrity, if pl
 Work on input validation, gameplay, and level manager.
 
 **Details**:
-The animations for the player and enemy attack, hit, and defeat are done. A timer was added in order to add some level of difficulty to the game. Working on question manager class.
+The animations for the player and enemy attack, hit, and defeat are done. A timer was added in order to add some level of difficulty to the game. Working on question manager class. Add an automated enemy attack system that damages the player at regular intervals, along with scoring improvements and level structure refinements.
+
+## Sprint Review
+**Date**: 11/23/2025
+
+**Main Objective**: 
+Finish input validation, gameplay, and level manager.
+
+**Details**:
+Implemented auto-attacks that trigger independently of player input every 10% of total game duration. Added the logic and visual for the player and enemy, including attack animation, hit animation, and defeat animation. Recorded the progress of the user by showing stars in the results screen. Handled user input and input validation, created question bank and answers allowing user to interact with game and having game react to user accordingly.
+
+# SPRINT 4
+
+## Sprint Planning
+**Date**: 11/24/2025
+
+**Main Objective**: 
+Work on adding testing to the project.
+
+**Details**:
+Add CI testing for GameScreen model testing character health values, alive check's, and auto attacks. Add testing on the Character Object.
+
+## StandUp
+**Date**: 11/26/2025
+
+**Main Objective**: 
+Work on adding testing to the project.
+
+**Details**:
+Added testing for ResultsScreen model testing that the number of stars, the final score and the leaderboard display the correct values. Also added testing for the main attacks of the characters by checking health values, alive check's, and attack damage.
+
+## Sprint Review
+**Date**: 11/30/2025
+
+**Main Objective**: 
+
+
+**Details**:
+

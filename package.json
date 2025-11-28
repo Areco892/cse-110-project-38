@@ -12,7 +12,7 @@
   "devDependencies": {
     "typescript": "~5.9.3",
     "vite": "^7.1.12",
-    "vitest": "^4.0.13"
+    "vitest": "^4.0.14"
   },
   "dependencies": {
     "konva": "^10.0.2"
