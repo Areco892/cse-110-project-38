@@ -1,12 +1,30 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { LeaderboardEntry, ResultsScreenModel } from '../../../src/screens/ResultsScreen/ResultsScreenModel'
 
 describe('Result Screen - Number of Stars', () => {
   let model: ResultsScreenModel
 
   beforeEach(() => {
-    model = new ResultsScreenModel()
-  })
+    model = new ResultsScreenModel();
+    // Create a mock localStorage
+    const mockStorage: any = {
+      store: {} as Record<string, string>,
+      getItem(key: string) {
+        return this.store[key] ?? null;
+      },
+      setItem(key: string, value: string) {
+        this.store[key] = value;
+      },
+      removeItem(key: string) {
+        delete this.store[key];
+      },
+      clear() {
+        this.store = {};
+      }
+    };
+
+    vi.stubGlobal("localStorage", mockStorage);
+  });
 
   /**
    * Stars Test
